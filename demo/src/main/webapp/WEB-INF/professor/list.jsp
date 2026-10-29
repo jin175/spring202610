@@ -27,12 +27,15 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
-       
+        <div>
+            검색어 : <input v-model="keyword" @keyup.enter="fnList" type="text">
+            <button @click="fnList">검색</button>
+        </div>
         
         <div>
 			<table>
 				<tr>
-					<td>교수번호</td>
+					<td>번호</td>
 					<td>이름</td>
 					<td>직급</td>
                     <td>급여</td>
@@ -68,14 +71,17 @@
         data() {
             return {
                 // 변수 - (key : value)
-                list : []
+                list : [],
+                keyword : ""
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
             fnList : function () {
                 let self = this;
-                let param = {};
+                let param = {
+                    keyword : self.keyword
+                };
                 $.ajax({
                     url: "http://localhost:8080/professor/list.dox",
                     dataType: "json",
@@ -85,7 +91,6 @@
                         console.log(data);
                         self.list = data.list;
                         
-
                     }
                 });
             },
