@@ -3,44 +3,51 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.mapper.ProfessorMapper">
-
 	<select id="selectProfessorList" parameterType="hashmap" resultType="com.example.demo.model.Professor">
-		SELECT * 
-		FROM PROFESSOR
+		SELECT *
+		FROM PROFESSOR P
+		INNER JOIN DEPARTMENT D ON P.DEPTNO = D.DEPTNO
 		WHERE NAME LIKE CONCAT('%', #{keyword}, '%')
+		<if test="deptNo != null and deptNo != ''">
+			AND P.DEPTNO = #{deptNo}
+		</if>
+		
+		<if test="deptNo != null and deptNo != ''">
+			AND POSITION = #{position}
+		</if>
+		
 	</select>
-
 	
+	<select id="selectProfessor" parameterType="hashmap" resultType="com.example.demo.model.Professor">
+		SELECT *
+		FROM PROFESSOR WHERE PROFNO = #{profNo}
+	</select>
 	
-	
-	<!-- 삭제 -->
 	<delete id="deleteProfessor" parameterType="hashmap">
 		DELETE FROM PROFESSOR WHERE PROFNO = #{profNo}
 	</delete>
 	
-	
-	<!-- 삽입 -->
 	<insert id="insertProfessor" parameterType="hashmap">
 		INSERT INTO PROFESSOR(PROFNO, NAME, POSITION, PAY, DEPTNO)
-		VALUES(#{profNo}, #{name}, #{position}, #{pay}, #{deptNo})
+		VALUES(#{profNo}, #{name}, #{position}, #{pay}, #{deptNo}) 
 	</insert>
-
-	<!--체크 -->
-	<select id="selectProfessor" parameterType="hashmap" resultType="com.example.demo.model.Professor">
-		SELECT * FROM PROFESSOR WHERE PROFNO= #{profNo}
-		
-	</select>
 	
-
+	<update	id="updateProfessor" parameterType="hashmap">
+		UPDATE PROFESSOR SET
+			NAME = #{name},
+			POSITION = #{position},
+			PAY = #{pay}
+		WHERE PROFNO = #{profNo}
+	</update>
+	
 	<!-- DEPARTMENT -->
 	<select id="selectDeptList" parameterType="hashmap" resultType="com.example.demo.model.Professor">
 		SELECT * 
 		FROM DEPARTMENT
 		WHERE DNAME LIKE '%학과'
-	</select>	
-	
-	
-	
-
-
+	</select>
 </mapper>
+
+
+
+

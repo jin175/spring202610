@@ -3,15 +3,41 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.mapper.EmpMapper">
+
 	<select id="selectEmpList" parameterType="hashmap" resultType="com.example.demo.model.Emp">
-		SELECT * FROM EMP
+		SELECT *
+		FROM EMP E
+		INNER JOIN SALGRADE S ON E.SAL BETWEEN S.LOSAL AND S.HISAL
+		WHERE 1=1	
+	
+		<if test="grade != null and grade != ''">
+			AND GRADE = #{grade}
+		</if>
+		
+		
 		
 	</select>
 	
-
-	<!-- 삭제 -->
 	<delete id="deleteEmp" parameterType="hashmap">
 		DELETE FROM EMP WHERE EMPNO = #{empNo}
 	</delete>
+
+	<insert id="insertEmp" parameterType="hashmap">
+		INSERT INTO EMP(EMPNO, ENAME, JOB, SAL)
+		VALUES(#{empNo}, #{eName}, #{job}, #{sal})
+	</insert>
+
+
+
+	<!--중복 체크 -->
+	<select id="selectEmp" parameterType="hashmap" resultType="com.example.demo.model.Emp">
+		SELECT * 
+		FROM EMP 
+		WHERE EMPNO= #{empNo}
+		
+	</select>
+	
+	
 	
 </mapper>
+

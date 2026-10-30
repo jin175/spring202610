@@ -13,46 +13,67 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.dao.EmpService;
 import com.google.gson.Gson;
 
-
 @Controller
 public class EmpController {
-	
 	@Autowired
 	EmpService empService;
-	
 	
 	@RequestMapping("/emp/list.do")
 	public String test(Model model) throws Exception{
 		
 		return "/emp/list";
-	}	
+	}
 	
+	@RequestMapping("/emp/add.do")
+	public String add(Model model) throws Exception{
+		
+		return "/emp/add";
+	}
 	
+	@RequestMapping("/emp/view.do")
+	public String view(Model model, @RequestParam HashMap<String, Object> map) throws Exception{
+		model.addAttribute("empNo", map.get("empNo"));
+		
+		return "/emp/view";
+	}
 	
 	@RequestMapping(value = "/emp/list.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String login(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		System.out.println("dox 호출");
 		
 		resultMap = empService.getEmpList(map);
 		
 		return new Gson().toJson(resultMap); 
 	}
 	
-	
-	
 	@RequestMapping(value = "/emp/remove.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String remove(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		System.out.println(map);
 		
 		resultMap = empService.removeEmp(map);
 		
 		return new Gson().toJson(resultMap); 
 	}
 	
+	@RequestMapping(value = "/emp/add.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String add(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap = empService.addEmp(map);
+		
+		return new Gson().toJson(resultMap); 
+	}
 	
-	
+	@RequestMapping(value = "/emp/info.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String info(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap = empService.getEmp(map);
+		
+		return new Gson().toJson(resultMap); 
+	}
 }
