@@ -6,16 +6,22 @@
 
 	<select id="selectBoardList" parameterType="hashmap" resultType="com.example.demo.model.Board">
 		SELECT *
-		FROM TBL_BOARD
+		FROM TBL_BOARD 
+		WHERE TITLE LIKE CONCAT('%', #{keyword}, '%')
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
 	<select id="selectBoardCount" parameterType="hashmap" resultType="int">
 		SELECT COUNT(*)
 		FROM TBL_BOARD
+		WHERE TITLE LIKE CONCAT('%', #{keyword}, '%')
 	</select>
 	
-	
+	<select id="selectBoard" parameterType="hashmap" resultType="com.example.demo.model.Board">
+		SELECT *
+		FROM TBL_BOARD 
+		WHERE BOARDNO = #{boardNo}
+	</select>
 	
 	<delete id="deleteBoard" parameterType="hashmap">
 		DELETE FROM TBL_BOARD WHERE BOARDNO = #{boardNo}
@@ -27,8 +33,17 @@
 		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
-		
 	</delete>
 	
+	<insert id="insertBoard" parameterType="hashmap">
+		INSERT INTO TBL_BOARD
+		VALUES(NULL, #{title}, #{contents}, 'user01', 0, #{kind}, NOW(), NOW())
+		<!-- userId는 잠깐 하드코딩. 아직 세션 안해서 -->
+	</insert>
+	
 </mapper>
+
+
+
+
 

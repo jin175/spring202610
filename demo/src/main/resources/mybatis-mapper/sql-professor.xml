@@ -15,7 +15,13 @@
 		<if test="deptNo != null and deptNo != ''">
 			AND POSITION = #{position}
 		</if>
-		
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+	<select id="selectProfessorCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM PROFESSOR
+		WHERE NAME LIKE CONCAT('%', #{keyword}, '%')
 	</select>
 	
 	<select id="selectProfessor" parameterType="hashmap" resultType="com.example.demo.model.Professor">

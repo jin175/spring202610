@@ -16,11 +16,11 @@ function pageChange(url, param) {
         if(param[name] instanceof Object){
             val = JSON.stringify(param[name]);
         } else {
-            val = param[name];	
+            val = param[name];
         }
         
         var input = document.createElement("input");
-        input.type = "hidden";ds
+        input.type = "hidden";
         input.name = item;
         input.value = val;
         form.insertBefore(input, null);

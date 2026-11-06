@@ -18,11 +18,9 @@ public class BoardService {
 	public HashMap<String, Object> getBoardList(HashMap<String, Object> map) {
 		HashMap<String, Object> resultMap = new HashMap();
 		try {
-			
-			// object -> 문자열 -> 숫자 
+			// object -> 문자열 -> 숫자
 			String limit = (String) map.get("limit");
 			String offset = (String) map.get("offset");
-			
 			
 			map.put("limit", Integer.parseInt(limit));
 			map.put("offset", Integer.parseInt(offset));
@@ -32,6 +30,21 @@ public class BoardService {
 			
 			resultMap.put("list", list);
 			resultMap.put("count", count);
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> getBoard(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			
+			Board info = boardMapper.selectBoard(map);
+			resultMap.put("info", info);
 			resultMap.put("result", "success");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -66,6 +79,21 @@ public class BoardService {
 			// TODO: handle exception
 			resultMap.put("result", "fail");
 			resultMap.put("message", Message.DELETE_FAIL);
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> addBoard(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			int cnt = boardMapper.insertBoard(map);
+			resultMap.put("message", Message.INSERT_SUCCESS);
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.INSERT_FAIL);
 			System.out.println(e.getMessage());
 		}
 		return resultMap;

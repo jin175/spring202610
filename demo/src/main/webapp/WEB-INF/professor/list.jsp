@@ -48,7 +48,14 @@
 
             </select>
 
+            <select v-model="pageSize" @change="fnList">
+                
+                <option value="5">5개씩</option>
+                <option value="10">10개씩</option>
+                <option value="15">15개씩</option>
+                <option value="20">20개씩</option>
 
+            </select>
 
 
          </div>
@@ -87,8 +94,17 @@
                 </tr>
 
 
-
 			</table>
+
+
+            <div id="paging">
+                    <a href="javascript:;" v-if="currentPage != 1" @click="currentPage--; fnList();">◀</a>
+                    <a @click="currentPage = item; fnList();" :class="{active : currentPage == item}" href="javascript:;" v-for="item in idx">{{item}}</a>
+                    <a href="javascript:;" v-if="currentPage != idx" @click="currentPage++; fnList();">▶</a>
+                </div>
+
+
+
 		</div>
         <div>
             <a href="add.do"><button>교수추가</button></a>
@@ -106,7 +122,13 @@
                 keyword : "",
                 deptList : [],
                 deptNo : "",
-                position : ""
+                position : "",
+
+
+                idx : 1, // 페이징 갯수 (최대 페이지 수)
+                pageSize : 5, // 한페이지에 출력할 개수
+                currentPage : 1 // 현재 페이지 
+
             };
         },
         methods: {
@@ -116,7 +138,9 @@
                 let param = {
                     keyword : self.keyword,
                     deptNo : self.deptNo,
-                    position : self.position
+                    position : self.position,
+                    limit : self.pageSize,
+                    offset : self.pageSize * (self.currentPage -1)
                 
                 };
                 $.ajax({
@@ -128,6 +152,7 @@
                         console.log(data);
                         self.list = data.list;
                         self.deptList = data.deptList;
+                        self.idx = Math.ceil(data.count / self.pageSize);
                     }
                 });
             },
@@ -152,6 +177,9 @@
                 // view.do 페이지 이동
                 pageChange("view.do", {profNo : profNo});
             }
+
+
+
         }, // methods
         mounted() {
             // 처음 시작할 때 실행되는 부분

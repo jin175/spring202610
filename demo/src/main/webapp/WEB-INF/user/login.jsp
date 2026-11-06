@@ -65,11 +65,9 @@
                     data: param,
                     success: function (data) {
                         alert(data.message);
-                        if(data.result == "success"){
-                            if(data.loginFlg){
-                                location.href="/professor/list.do";
-                            } 
-                        }
+                        if(data.loginFlg){
+                            location.href="/professor/list.do";
+                        } 
                     }
                 });
             }
