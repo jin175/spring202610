@@ -37,12 +37,11 @@ public class UserService {
 		return resultMap;
 	}
 	
-	
 	public HashMap<String, Object> addUser(HashMap<String, Object> map){
 		HashMap<String, Object> resultMap = new HashMap();
 		
 		try {
-			int result =  userMapper.insertUser(map);
+			int result = userMapper.insertUser(map);			
 			resultMap.put("result", "success");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -53,6 +52,5 @@ public class UserService {
 		
 		return resultMap;
 	}
-	
 	
 }

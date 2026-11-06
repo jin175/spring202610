@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.ProductMapper">
+	<select id="selectProductList" parameterType="hashmap" resultType="com.example.demo.model.Product">
+		SELECT *, ROUND(PRICE) AS CONVERT_PRICE
+		FROM PRODUCT WHERE 1=1
+		and status = 'SALE'
+		<if test="category != null and category != ''">
+			AND CATEGORY = #{category}
+		</if>
+		<choose>
+			<when test="order == 1">
+				ORDER BY PRICE ASC
+			</when>
+			<when test="order == 2">
+				ORDER BY PRICE DESC
+			</when>
+			<when test="order == 3">
+				ORDER BY RELEASE_DATE DESC
+			</when>
+			<otherwise>
+				ORDER BY PRODUCT_ID ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectProduct" parameterType="hashmap" resultType="com.example.demo.model.Product">
+		SELECT *, ROUND(PRICE) AS CONVERT_PRICE
+		FROM PRODUCT
+		WHERE PRODUCT_ID = #{productId}
+	</select>
+	
+	
+	<select id="selectCategoryList" parameterType="hashmap" resultType="com.example.demo.model.Product">
+		SELECT DISTINCT CATEGORY
+		FROM PRODUCT
+	</select>
+	
+	<delete id="deleteProduct" parameterType="hashmap">
+		UPDATE PRODUCT SET STATUS ='STOP' 
+		WHERE PRODUCT_ID = #{productId}
+	</delete>
+	
+	
+	
+</mapper>
+
+
+
+
+
+
+
+

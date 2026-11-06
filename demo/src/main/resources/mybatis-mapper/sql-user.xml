@@ -9,7 +9,6 @@
 		WHERE USER_ID = #{userId} AND PWD = #{pwd}
 	</select>
 	
-	
 	<insert id="insertUser" parameterType="hashmap">
 		INSERT INTO TBL_USER
 		VALUES(#{userId}, #{pwd}, #{userName}, #{addr}, 'C')
@@ -17,3 +16,5 @@
 	
 	
 </mapper>
+
+
