@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.common.Message;
 import com.example.demo.mapper.ProductMapper;
 import com.example.demo.model.Product;
 
@@ -57,5 +58,33 @@ public class ProductService {
 		
 		return resultMap;
 	}
+	
+	
+	public HashMap<String, Object> addProduct(HashMap<String, Object> map){
+		HashMap<String, Object> resultMap = new HashMap();
+		int productId = productMapper.insertProduct(map);
+		resultMap.put("productId", productId);
+		resultMap.put("result", "success");
+		
+		return resultMap;
+	}
+	
+	
+	public HashMap<String, Object> addProductFile(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			int cnt = productMapper.insertProductFile(map);
+			resultMap.put("message", Message.INSERT_SUCCESS);
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.INSERT_FAIL);
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	
 	
 }

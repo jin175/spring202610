@@ -22,4 +22,10 @@ public interface ProductMapper {
 	// 삭제
 	int deleteProduct(HashMap<String, Object> map);
 	
+	// 추가
+	int insertProduct(HashMap<String, Object> map);
+	
+	// 파일 업로드
+	int insertProductFile(HashMap<String, Object> map);
+	
 }

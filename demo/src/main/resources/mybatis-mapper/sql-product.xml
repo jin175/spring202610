@@ -33,6 +33,7 @@
 	</select>
 	
 	
+	
 	<select id="selectCategoryList" parameterType="hashmap" resultType="com.example.demo.model.Product">
 		SELECT DISTINCT CATEGORY
 		FROM PRODUCT
@@ -42,6 +43,16 @@
 		UPDATE PRODUCT SET STATUS ='STOP' 
 		WHERE PRODUCT_ID = #{productId}
 	</delete>
+	
+	<insert id="insertProduct" parameterType="hashmap" useGeneratedKeys="true" keyColumn="PRODUCT_ID" keyProperty="productId">
+		INSERT INTO PRODUCT(CATEGORY, PRODUCT_ID, PRODUCT_NAME, DESCRIPTION)
+		VALUES(#{category}, NULL, #{productName}, #{description}) 
+	</insert>
+	
+	<insert id="insertProductFile" parameterType="hashmap">
+		INSERT INTO PRODUCT_FILE
+		VALUES(NULL, #{idx}, #{path}, #{fileName}, #{orgName}, #{size}, #{extName})
+	</insert>
 	
 	
 	

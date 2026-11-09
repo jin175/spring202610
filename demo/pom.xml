@@ -84,6 +84,13 @@
 		</dependency>
 		
 		
+		<!-- 1. 의존성 주입(pom.xml)-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		
 	</dependencies>
 
 	<build>

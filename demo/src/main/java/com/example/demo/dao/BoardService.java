@@ -9,11 +9,17 @@ import org.springframework.stereotype.Service;
 import com.example.demo.common.Message;
 import com.example.demo.mapper.BoardMapper;
 import com.example.demo.model.Board;
+import com.example.demo.model.File;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class BoardService {
 	@Autowired
 	BoardMapper boardMapper;
+	
+	@Autowired
+	HttpSession session;
 	
 	public HashMap<String, Object> getBoardList(HashMap<String, Object> map) {
 		HashMap<String, Object> resultMap = new HashMap();
@@ -44,7 +50,9 @@ public class BoardService {
 		try {
 			
 			Board info = boardMapper.selectBoard(map);
+			List<File> fileList = boardMapper.selectBoardFile(map);
 			resultMap.put("info", info);
+			resultMap.put("fileList", fileList);
 			resultMap.put("result", "success");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -87,13 +95,51 @@ public class BoardService {
 	public HashMap<String, Object> addBoard(HashMap<String, Object> map) {
 		HashMap<String, Object> resultMap = new HashMap();
 		try {
-			int cnt = boardMapper.insertBoard(map);
+			
+			if(session.getAttribute("sessionId") != null) {
+				map.put("sessionId", session.getAttribute("sessionId"));
+				int cnt = boardMapper.insertBoard(map);
+				resultMap.put("boardNo", map.get("boardNo"));
+				resultMap.put("message", Message.INSERT_SUCCESS);
+				resultMap.put("result", "success");
+			} else {
+				resultMap.put("message", "세션이 만료되었습니다.");
+				resultMap.put("result", "fail");
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.INSERT_FAIL);
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> addBoardFile(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			int cnt = boardMapper.insertBoardFile(map);
 			resultMap.put("message", Message.INSERT_SUCCESS);
 			resultMap.put("result", "success");
 		} catch (Exception e) {
 			// TODO: handle exception
 			resultMap.put("result", "fail");
 			resultMap.put("message", Message.INSERT_FAIL);
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> editBoard(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			int cnt = boardMapper.updateBoard(map);
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
 			System.out.println(e.getMessage());
 		}
 		return resultMap;

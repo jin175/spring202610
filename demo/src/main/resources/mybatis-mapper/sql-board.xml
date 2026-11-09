@@ -23,6 +23,15 @@
 		WHERE BOARDNO = #{boardNo}
 	</select>
 	
+	
+	<select id="selectBoardFile" parameterType="hashmap" resultType="com.example.demo.model.File">
+		SELECT *
+		FROM TBL_BOARD_FILE 
+		WHERE BOARDNO = #{boardNo}
+	</select>
+	
+	
+	
 	<delete id="deleteBoard" parameterType="hashmap">
 		DELETE FROM TBL_BOARD WHERE BOARDNO = #{boardNo}
 	</delete>
@@ -35,10 +44,24 @@
 		</foreach>
 	</delete>
 	
-	<insert id="insertBoard" parameterType="hashmap">
+	<insert id="insertBoard" parameterType="hashmap" useGeneratedKeys="true" keyColumn="BOARDNO" keyProperty="boardNo">
 		INSERT INTO TBL_BOARD
 		VALUES(NULL, #{title}, #{contents}, 'user01', 0, #{kind}, NOW(), NOW())
 		<!-- userId는 잠깐 하드코딩. 아직 세션 안해서 -->
+	</insert>
+	
+	<update id="updateBoard" parameterType="hashmap">
+		UPDATE TBL_BOARD SET
+			TITLE = #{title},
+			CONTENTS = #{contents},
+			KIND = #{kind},
+			UDATETIME = NOW()
+		WHERE BOARDNO = #{boardNo}
+	</update>
+	
+	<insert id="insertBoardFile" parameterType="hashmap">
+		INSERT INTO TBL_BOARD_FILE
+		VALUES(NULL, #{idx}, #{path}, #{fileName}, #{orgName}, #{size}, #{extName})
 	</insert>
 	
 </mapper>
