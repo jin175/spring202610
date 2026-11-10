@@ -124,7 +124,8 @@
             fnInfo : function () {
                 let self = this;
                 let param = {
-                    boardNo : self.boardNo
+                    boardNo : self.boardNo,
+                    option : "EDIT"
                 };
                 $.ajax({
                     url: "view.dox",

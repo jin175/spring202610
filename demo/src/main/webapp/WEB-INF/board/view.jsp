@@ -29,15 +29,41 @@
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
             <h3>제목 : {{info.title}}</h3>
-            <h3>작성자 : {{info.userId}} | 조회수 : {{info.cnt}}</h3>
+            <h3>작성자 : {{info.userName}} | 조회수 : {{info.cnt}}</h3>
             <hr>
             <h4>내용</h4>
             <img v-for="item in fileList" :src="item.filePath">
             <div v-html="info.contents"></div>
         </div>
         <hr>
+
+        <!-- 댓글 -->
         <div>
+            <h4>댓글 ({{commentList.length}})</h4>
+
+            <div v-if="commentList.length == 0">
+                등록된 댓글이 없습니다.
+            </div>
+
+
+            <div v-for="item in commentList" ></div>
+
+            <div>
+            <b>{{item.userName}}</b>
+            <span>
+                {{item.contents}}
+            </span>
+            
+        </div>
+        </div>
+             
+
+        </div>
+
+
+        <div v-if="sessionId == info.userId || sessionRole == 'A' ">
             <button @click="fnView">수정</button>
+            <button @click="fnRemove">삭제</button>
         </div>
     </div>
 </body>
@@ -48,9 +74,14 @@
         data() {
             return {
                 // 변수 - (key : value)
+                sessionId : "${sessionId}",
+                sessionName : "${sessionName}",
+                sessionRole : "${sessionRole}",
+
                 boardNo : "${boardNo}",
                 info : {},
-                fileList : []
+                fileList : [],
+                commentList : []
             };
         },
         methods: {
@@ -69,12 +100,54 @@
                         console.log(data);
                         self.info = data.info;
                         self.fileList = data.fileList;
+                        self.commentList = data.commentList;
+
+                        // 댓글 목록
+                        self.fnCommentList();
+
                     }
                 });
             },
             fnView : function(){
                 let self = this;
                 pageChange("edit.do", {boardNo : self.boardNo});
+            },
+            fnRemove : function () {
+                let self = this;
+                let param = {
+                    boardNo : self.boardNo
+                };
+                $.ajax({
+                    url: "remove.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        alert(data.message);
+                        if(data.result == "success"){
+                            location.href = "list.do";
+                        }
+                        
+                    }
+                });
+            },
+            fnCommentList : function() {
+                let self = this;
+
+                let param = {
+                    boardNo : self.boardNo
+                };
+
+                $.ajax({
+                    url: "commentList.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function(data) {
+                        console.log("댓글 목록:", data);
+                        self.commentList = data.commentList;
+                    }
+                });
             }
         }, // methods
         mounted() {

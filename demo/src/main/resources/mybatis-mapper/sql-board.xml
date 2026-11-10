@@ -6,7 +6,8 @@
 
 	<select id="selectBoardList" parameterType="hashmap" resultType="com.example.demo.model.Board">
 		SELECT *
-		FROM TBL_BOARD 
+		FROM TBL_BOARD B
+		INNER JOIN TBL_USER U ON B.USERID = U.USER_ID
 		WHERE TITLE LIKE CONCAT('%', #{keyword}, '%')
 		LIMIT #{limit} OFFSET #{offset}
 	</select>
@@ -19,18 +20,23 @@
 	
 	<select id="selectBoard" parameterType="hashmap" resultType="com.example.demo.model.Board">
 		SELECT *
-		FROM TBL_BOARD 
+		FROM TBL_BOARD B
+		INNER JOIN TBL_USER U ON U.USER_ID = B.USERID
 		WHERE BOARDNO = #{boardNo}
 	</select>
 	
+	<select id="selectBoardCommentList" parameterType="hashmap" resultType="com.example.demo.model.Board">
+		SELECT *
+		FROM TBL_BOARD_COMMENT C
+		INNER JOIN TBL_USER U ON C.USERID = U.USER_ID
+		WHERE BOARDNO = #{boardNo}
+	</select>
 	
 	<select id="selectBoardFile" parameterType="hashmap" resultType="com.example.demo.model.File">
 		SELECT *
 		FROM TBL_BOARD_FILE 
 		WHERE BOARDNO = #{boardNo}
 	</select>
-	
-	
 	
 	<delete id="deleteBoard" parameterType="hashmap">
 		DELETE FROM TBL_BOARD WHERE BOARDNO = #{boardNo}
@@ -44,10 +50,15 @@
 		</foreach>
 	</delete>
 	
-	<insert id="insertBoard" parameterType="hashmap" useGeneratedKeys="true" keyColumn="BOARDNO" keyProperty="boardNo">
+	<insert id="insertBoard" 
+			parameterType="hashmap" 
+			useGeneratedKeys="true" 
+			keyColumn="BOARDNO"
+			keyProperty="boardNo"
+	>
 		INSERT INTO TBL_BOARD
-		VALUES(NULL, #{title}, #{contents}, 'user01', 0, #{kind}, NOW(), NOW())
-		<!-- userId는 잠깐 하드코딩. 아직 세션 안해서 -->
+		VALUES(NULL, #{title}, #{contents}, #{sessionId}, 0, #{kind}, NOW(), NOW())
+		
 	</insert>
 	
 	<update id="updateBoard" parameterType="hashmap">
@@ -62,6 +73,11 @@
 	<insert id="insertBoardFile" parameterType="hashmap">
 		INSERT INTO TBL_BOARD_FILE
 		VALUES(NULL, #{idx}, #{path}, #{fileName}, #{orgName}, #{size}, #{extName})
+	</insert>
+	
+	<insert id="insertBoardComment" parameterType="hashmap">
+		INSERT INTO TBL_BOARD_COMMENT
+		VALUES(NULL, #{boardNo}, NULL, #{contents}, #{sessionId}, NOW(), NULL)
 	</insert>
 	
 </mapper>
