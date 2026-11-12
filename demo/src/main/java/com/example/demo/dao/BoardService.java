@@ -149,6 +149,31 @@ public class BoardService {
 		return resultMap;
 	}
 	
+	public HashMap<String, Object> editBoardComment(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			
+			if(session.getAttribute("sessionId") != null) {
+				map.put("sessionId", session.getAttribute("sessionId"));
+				int cnt = boardMapper.updateBoardComment(map);
+				
+				resultMap.put("message", Message.UPDATE_SUCCESS);
+				resultMap.put("result", "success");
+			} else {
+				resultMap.put("message", "세션이 만료되었습니다.");
+				resultMap.put("result", "fail");
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.UPDATE_FAIL);
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
 	public HashMap<String, Object> addBoardFile(HashMap<String, Object> map) {
 		HashMap<String, Object> resultMap = new HashMap();
 		try {
@@ -172,6 +197,21 @@ public class BoardService {
 		} catch (Exception e) {
 			// TODO: handle exception
 			resultMap.put("result", "fail");
+			System.out.println(e.getMessage());
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> removeBoardComment(HashMap<String, Object> map) {
+		HashMap<String, Object> resultMap = new HashMap();
+		try {
+			int cnt = boardMapper.deleteBoardComment(map);
+			resultMap.put("message", Message.DELETE_SUCCESS);
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.DELETE_FAIL);
 			System.out.println(e.getMessage());
 		}
 		return resultMap;

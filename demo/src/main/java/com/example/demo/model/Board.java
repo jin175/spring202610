@@ -12,4 +12,6 @@ public class Board {
 	
 	private String userName;
 	private String commentNo;
+	
+	
 }

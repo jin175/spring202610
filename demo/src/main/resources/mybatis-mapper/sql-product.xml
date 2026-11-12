@@ -55,6 +55,18 @@
 	</insert>
 	
 	
+	<select id="selectProductSales" resultType="hashmap">
+	    SELECT
+	        P.PRODUCT_NAME,
+	        SUM(O.ORDER_PRICE) AS TOTAL_PRICE
+	    FROM PRODUCT_ORDERS O
+	    INNER JOIN PRODUCT P
+	        ON O.PRODUCT_ID = P.PRODUCT_ID
+	    GROUP BY P.PRODUCT_NAME
+	</select>
+	
+	
+	
 	
 </mapper>
 

@@ -36,36 +36,28 @@
             <div v-html="info.contents"></div>
         </div>
         <hr>
-
-        <!-- 댓글 -->
         <div>
-            <h4>댓글 ({{commentList.length}})</h4>
-
-            <div v-if="commentList.length == 0">
-                등록된 댓글이 없습니다.
+            <h3>댓글 목록</h3>
+            <div v-for="(item, index) in commentList">
+                <span><strong>{{item.userName}} : </strong></span>
+                <span v-if="index != editIndex">{{item.contents}}</span>
+                <span v-else><input v-model="editComment"></span>
+                <button v-if="sessionId == item.userId" @click="fnEditComment(index)">수정</button>
+                <button v-if="sessionId == item.userId && index != editIndex" @click="fnRemoveComment(item.commentNo)">삭제</button>
             </div>
-
-
-            <div v-for="item in commentList" ></div>
-
+            <br>
             <div>
-            <b>{{item.userName}}</b>
-            <span>
-                {{item.contents}}
-            </span>
-            
+                댓글작성 : <input @keyup.enter="fnAddComment" v-model="comment" style="width : 300px;">
+                <button @click="fnAddComment">등록</button>
+            </div>
         </div>
-        </div>
-             
-
-        </div>
-
-
+        <hr>
         <div v-if="sessionId == info.userId || sessionRole == 'A' ">
             <button @click="fnView">수정</button>
             <button @click="fnRemove">삭제</button>
         </div>
     </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </body>
 </html>
 
@@ -81,7 +73,11 @@
                 boardNo : "${boardNo}",
                 info : {},
                 fileList : [],
-                commentList : []
+                commentList : [],
+                comment : "",
+
+                editComment : "",
+                editIndex : -1
             };
         },
         methods: {
@@ -89,7 +85,8 @@
             fnInfo : function () {
                 let self = this;
                 let param = {
-                    boardNo : self.boardNo
+                    boardNo : self.boardNo,
+                    option : "VIEW"
                 };
                 $.ajax({
                     url: "view.dox",
@@ -101,10 +98,6 @@
                         self.info = data.info;
                         self.fileList = data.fileList;
                         self.commentList = data.commentList;
-
-                        // 댓글 목록
-                        self.fnCommentList();
-
                     }
                 });
             },
@@ -131,21 +124,74 @@
                     }
                 });
             },
-            fnCommentList : function() {
+            fnAddComment : function () {
                 let self = this;
-
                 let param = {
-                    boardNo : self.boardNo
+                    boardNo : self.boardNo,
+                    contents : self.comment
                 };
-
                 $.ajax({
-                    url: "commentList.dox",
+                    url: "add-comment.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
-                    success: function(data) {
-                        console.log("댓글 목록:", data);
-                        self.commentList = data.commentList;
+                    success: function (data) {
+                        alert(data.message);
+                        if(data.result == "success"){
+                            self.fnInfo();
+                            self.comment = "";
+                        }
+                        
+                    }
+                });
+            },
+            fnEditComment : function(index){
+                let self = this;
+                if(index != self.editIndex){
+                    self.editIndex = index;
+                    self.editComment = self.commentList[index].contents;
+                    return;
+                }
+
+                let param = {
+                    contents : self.editComment,
+                    commentNo : self.commentList[index].commentNo
+                };
+                $.ajax({
+                    url: "edit-comment.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        alert(data.message);
+                        if(data.result == "success"){
+                            self.fnInfo();
+                            self.editIndex = -1;
+                        }
+                        
+                    }
+                });
+                
+            },
+            fnRemoveComment : function(commentNo){
+                let self = this;
+                let param = {
+                    commentNo : commentNo
+                };
+                if(!confirm("정말 댓글 삭제?")){
+                    return;
+                }
+                $.ajax({
+                    url: "remove-comment.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        alert(data.message);
+                        if(data.result == "success"){
+                            self.fnInfo();
+                        }
+                        
                     }
                 });
             }

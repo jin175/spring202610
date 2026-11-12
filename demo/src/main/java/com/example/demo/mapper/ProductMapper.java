@@ -28,4 +28,8 @@ public interface ProductMapper {
 	// 파일 업로드
 	int insertProductFile(HashMap<String, Object> map);
 	
+	// 차트
+	
+	public List<HashMap<String, Object>> selectProductSales();
+	
 }
