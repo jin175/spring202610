@@ -18,18 +18,8 @@ public interface ProductMapper {
 	// 카테고리 목록
 	List<Product> selectCategoryList(HashMap<String, Object> map);
 	
+	// 결제 내용 추가
+	int insertProductOrder(HashMap<String, Object> map);
 	
-	// 삭제
-	int deleteProduct(HashMap<String, Object> map);
-	
-	// 추가
-	int insertProduct(HashMap<String, Object> map);
-	
-	// 파일 업로드
-	int insertProductFile(HashMap<String, Object> map);
-	
-	// 차트
-	
-	public List<HashMap<String, Object>> selectProductSales();
 	
 }

@@ -29,21 +29,19 @@
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
             <select v-model="si" @change="fnGuList">
-                <option value="">:: 선택 ::</option>
-                <option v-for="item in siList" :value="item.si">{{item.si}}</option>
+                시 : <option value="">:: 선택 ::</option>
+                <option :value="item.si" v-for="item in siList">{{item.si}}</option>
             </select>
-
             <select v-model="gu" @change="fnDongList">
-                <option value="">:: 선택 ::</option>
-                <option v-for="item in guList" :value="item.gu">{{item.gu}}</option>
+                구 : <option value="">:: 선택 ::</option>
+                <option :value="item.gu" v-for="item in guList">{{item.gu}}</option>
             </select>
-
-            <select v-model="dong">
-                <option value="">:: 선택 ::</option>
-                <option v-for="item in dongList" :value="item.dong">{{item.dong}}</option>
+            <select v-model="dong" @change="fnGetWeather">
+                동 : <option value="">:: 선택 ::</option>
+                <option :value="item" v-for="item in dongList">{{item.dong}}</option>
             </select>
-
         </div>
+        
     </div>
 </body>
 </html>
@@ -53,18 +51,21 @@
         data() {
             return {
                 // 변수 - (key : value)
-                si: "",
-                gu: "",
-                dong: "",
-                siList: [],
-                guList: [],
-                dongList: []
+                siList : [],
+                guList : [],
+                dongList : [],
+                si : "",
+                gu : "",
+                dong : {}
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
             fnSiList : function () {
                 let self = this;
+                self.dongList = [];
+                self.dong = "";
+
                 let param = {};
                 $.ajax({
                     url: "http://localhost:8080/area/si.dox",
@@ -73,18 +74,18 @@
                     data: param,
                     success: function (data) {
                         console.log(data);
-                        self.siList = data.siList; 
+                        self.siList = data.siList;
                     }
                 });
             },
             fnGuList : function () {
                 let self = this;
+                self.guList = [];
                 self.gu = "";
+                self.dongList = [];
                 self.dong = "";
                 let param = {
-                    si : self.si,
-                    
-            
+                    si : self.si
                 };
                 $.ajax({
                     url: "http://localhost:8080/area/gu.dox",
@@ -93,12 +94,13 @@
                     data: param,
                     success: function (data) {
                         console.log(data);
-                        self.guList = data.guList; 
+                        self.guList = data.guList;
                     }
                 });
             },
             fnDongList : function () {
                 let self = this;
+                self.dongList = [];
                 self.dong = "";
                 let param = {
                     si : self.si,
@@ -111,23 +113,23 @@
                     data: param,
                     success: function (data) {
                         console.log(data);
-                        self.dongList = data.dongList; 
+                        self.dongList = data.dongList;
                     }
                 });
             },
 
             fnGetWeather : function () {
                 let self = this;
-                self.dong = decodeURIComponent("");
+                
                 let param = {
-                    ServiceKey : "",
+                    ServiceKey : decodeURI("06655b7d8a13fc957f011f6b814863354021c1f1374b169bc6cbf6384d38348a"),
                     pageNo : 1,
                     numOfRows : 1000,
                     dataType : "JSON",
-                    base_date : "20261112",
-                    base_time : "1600",
-                    nx : 55,
-                    ny : 125
+                    base_date : "20261113",
+                    base_time : "0900",
+                    nx : self.dong.nx,
+                    ny : self.dong.ny
 
                 };
                 $.ajax({
@@ -137,7 +139,25 @@
                     data: param,
                     success: function (data) {
                         console.log(data);
-                        self.dongList = data.dongList; 
+                        let items = data.response.body.items.item.length;
+                        // self.dongList = data.dongList; 
+                        for(let i=0; i<items.length; i++){
+                            let item = items[i];
+                            if(item.category == "T1H"){
+                                // 기온에 대한 처리 : ℃
+                                console.log("기온 ==> ", item.obsrValue);
+                            }
+                            if(item.category == "RN1"){
+                                // 강수에 대한 처리 : mm
+                                console.log("1시간 강수 ==> ", item.obsrValue);
+                            }
+// 수정 필요!!!
+                            if(item.category == "PTY"){
+                                // 강수량에 대한 처리
+                                // 없음(0), 비(1), 비/눈(2), 눈(3)
+                                console.log("강수 형태 ==> ", item.obsrValue);
+                            }
+                        }
                     }
                 });
             }
@@ -151,7 +171,7 @@
             // 처음 시작할 때 실행되는 부분
             let self = this;
             self.fnSiList();
-            self.fnGetWeather();
+            // self.fnGetWeather();
         }
     });
 

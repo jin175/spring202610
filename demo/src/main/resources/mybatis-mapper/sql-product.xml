@@ -4,9 +4,9 @@
 
 <mapper namespace="com.example.demo.mapper.ProductMapper">
 	<select id="selectProductList" parameterType="hashmap" resultType="com.example.demo.model.Product">
-		SELECT *, ROUND(PRICE) AS CONVERT_PRICE
+		SELECT 
+			*, ROUND(PRICE) AS CONVERT_PRICE
 		FROM PRODUCT WHERE 1=1
-		and status = 'SALE'
 		<if test="category != null and category != ''">
 			AND CATEGORY = #{category}
 		</if>
@@ -33,38 +33,15 @@
 	</select>
 	
 	
-	
 	<select id="selectCategoryList" parameterType="hashmap" resultType="com.example.demo.model.Product">
 		SELECT DISTINCT CATEGORY
 		FROM PRODUCT
 	</select>
 	
-	<delete id="deleteProduct" parameterType="hashmap">
-		UPDATE PRODUCT SET STATUS ='STOP' 
-		WHERE PRODUCT_ID = #{productId}
-	</delete>
-	
-	<insert id="insertProduct" parameterType="hashmap" useGeneratedKeys="true" keyColumn="PRODUCT_ID" keyProperty="productId">
-		INSERT INTO PRODUCT(CATEGORY, PRODUCT_ID, PRODUCT_NAME, DESCRIPTION)
-		VALUES(#{category}, NULL, #{productName}, #{description}) 
+	<insert id="insertProductOrder" parameterType="hashmap">
+		INSERT INTO PRODUCT_ORDERS
+		VALUES(NULL, #{sessionId}, #{productId}, 1, #{price}, 'ORDERED', NOW(), '인천', 'DONE', #{merchantUid})
 	</insert>
-	
-	<insert id="insertProductFile" parameterType="hashmap">
-		INSERT INTO PRODUCT_FILE
-		VALUES(NULL, #{idx}, #{path}, #{fileName}, #{orgName}, #{size}, #{extName})
-	</insert>
-	
-	
-	<select id="selectProductSales" resultType="hashmap">
-	    SELECT
-	        P.PRODUCT_NAME,
-	        SUM(O.ORDER_PRICE) AS TOTAL_PRICE
-	    FROM PRODUCT_ORDERS O
-	    INNER JOIN PRODUCT P
-	        ON O.PRODUCT_ID = P.PRODUCT_ID
-	    GROUP BY P.PRODUCT_NAME
-	</select>
-	
 	
 	
 	

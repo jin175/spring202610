@@ -89,36 +89,36 @@
                 
                 // 아래 코드 실행하기 전에 값 검증
                 // 1. 아이디는 최소 5글자 
-               //if(self.userId.length < 5){
-                //    alert("아이디는 최소 5글자 입니다.");
-                //    return;
-               // }
+                if(self.userId.length < 5){
+                    alert("아이디는 최소 5글자 입니다.");
+                    return;
+                }
                 // 2. 아이디는 영어 소문자 + 숫자 조합, 영어로 시작
-                //const idRegex = /^[a-z](?=.*[a-z0-9])(?=.*\d)[a-z0-9]*$/;
-                //if(!idRegex.test(self.userId)){
-                //    alert("아이디는 영어 소문자+숫자 조합입니다. \n아이디는 소문자로 시작해야 합니다.");
-                //    return;
-                //}
+                const idRegex = /^[a-z](?=.*[a-z0-9])(?=.*\d)[a-z0-9]*$/;
+                if(!idRegex.test(self.userId)){
+                    alert("아이디는 영어 소문자+숫자 조합입니다. \n아이디는 소문자로 시작해야 합니다.");
+                    return;
+                }
 
                 // 3. 비밀번호는 최소 8글자
-                //if(self.pwd1.length < 8 || self.pwd2.length < 8){
-                //    alert("비밀번호는 최소 8글자 입니다.");
-                //    return;
-                //}
+                /* if(self.pwd1.length < 8 || self.pwd2.length < 8){
+                    alert("비밀번호는 최소 8글자 입니다.");
+                    return;
+                } */
                 // 4. 비밀번호는 특수문자 필수 포함
 
                 // 5. 비밀번호와 비밀번호 확인은 같아야 함.
-                //if(self.pwd1 != self.pwd2){
-               //     alert("비밀번호가 서로 다릅니다.");
-               //     return;
-               // }
+                if(self.pwd1 != self.pwd2){
+                    alert("비밀번호가 서로 다릅니다.");
+                    return;
+                }
                 // 6. 이름은 한글만
 
                 // 7. 이름, 주소는 빈 값 안됨
-               // if(self.userName == "" || self.addr == ""){
-               //     alert("필수값은 모두 입력해주세요!");
-               //    return;
-               // }
+                if(self.userName == "" || self.addr == ""){
+                    alert("필수값은 모두 입력해주세요!");
+                    return;
+                }
 
                 let param = {
                     userId : self.userId,

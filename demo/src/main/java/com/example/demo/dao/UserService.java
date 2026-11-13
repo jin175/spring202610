@@ -19,7 +19,7 @@ public class UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
+	
 	@Autowired
 	HttpSession session;
 	
@@ -27,13 +27,11 @@ public class UserService {
 		HashMap<String, Object> resultMap = new HashMap();
 		
 		try {
-			User user =  userMapper.selectUser(map);
-			
+			User user =  userMapper.selectUser(map);			
 			if(user != null) {
 				// 아이디는 검색 성공
-				
 				boolean login = passwordEncoder.matches((String) map.get("pwd"), user.getPwd());
-			
+				
 				if(login) {
 					session.setAttribute("sessionId", user.getUserId());
 					session.setAttribute("sessionName", user.getUserName());
@@ -44,23 +42,22 @@ public class UserService {
 					} else {
 						resultMap.put("url", "/board/list.do");
 					}
-//					session.setMaxInactiveInterval(0); 유지시간
-//					session.invalidate(); 세션 모든 정보 삭제 
 					
+//					session.setMaxInactiveInterval(0); 유지시간
+//					session.invalidate(); 세션 모든 정보 삭제
 					
 					resultMap.put("loginFlg", true);
 					resultMap.put("message", user.getUserName() + "님 환영합니다.");
-				}else {
+				} else {
 					resultMap.put("loginFlg", false);
 					resultMap.put("message", Message.LOGIN_FAIL);
 				}
+				
 			} else {
 				// 아이디가 없는 경우
 				resultMap.put("loginFlg", false);
 				resultMap.put("message", Message.LOGIN_FAIL);
 			}
-			
-			
 			resultMap.put("result", "success");
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -76,15 +73,58 @@ public class UserService {
 		HashMap<String, Object> resultMap = new HashMap();
 		
 		try {
-			
 			String hashPwd = passwordEncoder.encode((String) map.get("pwd"));
 			System.out.println("해시 전 패스워드 => " + map.get("pwd"));
 			System.out.println("해시 후 패스워드 => " + hashPwd);
 			
 			map.put("hashPwd", hashPwd);
-			int result = userMapper.insertUser(map);			
+			int result = userMapper.insertUser(map);	
 			resultMap.put("result", "success");
-		} catch (Exception e) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.DB_ERR);
+			System.out.println(e.getMessage());
+		}
+		
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> editPassword(HashMap<String, Object> map){
+		HashMap<String, Object> resultMap = new HashMap();
+		
+		try {
+			String hashPwd = passwordEncoder.encode((String) map.get("pwd"));
+			System.out.println("해시 전 패스워드 => " + map.get("pwd"));
+			System.out.println("해시 후 패스워드 => " + hashPwd);
+			
+			map.put("hashPwd", hashPwd);
+			int result = userMapper.updatePassword(map);	
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("message", Message.DB_ERR);
+			System.out.println(e.getMessage());
+		}
+		
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> getUserAuth(HashMap<String, Object> map){
+		HashMap<String, Object> resultMap = new HashMap();
+		
+		try {
+			int result = userMapper.selectUserAuth(map);
+			if(result > 0) {
+				resultMap.put("success", true);
+				resultMap.put("message", "인증되었습니다.");
+			} else {
+				resultMap.put("success", false);
+				resultMap.put("message", "인증에 실패했습니다. 아이디를 확인해주세요.");
+			}
+			
+		} catch (Exception e) {
 			// TODO: handle exception
 			resultMap.put("result", "fail");
 			resultMap.put("message", Message.DB_ERR);
