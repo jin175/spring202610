@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.DeptMapper"> 
+
+	<select id="selectDeptList" parameterType="hashmap" resultType="com.example.demo.model.Dept">
+		SELECT * 
+		FROM DEPARTMENT
+	
+	</select>
+	
+	<select id="selectDept" parameterType="hashmap" resultType="com.example.demo.model.Dept">
+		SELECT * 
+		FROM DEPARTMENT
+		WHERE DEPTNO = #{deptNo}
+	</select>
+	
+	
+	<insert id="insertDept" parameterType="hashmap">
+		INSERT INTO DEPARTMENT(DEPTNO, DNAME, PART, BUILD)
+		VALUES(#{deptNo}, #{dName}, #{part}, #{build})
+	</insert>
+	
+	<delete id="deleteDept" parameterType="hashmap">
+		DELETE FROM DEPARTMENT
+		WHERE DEPTNO = #{deptNo}
+	</delete>
+	
+	<update id="updateDept">
+		UPDATE DEPARTMENT SET
+			DNAME = #{dName}
+		WHERE DEPTNO = #{deptNo}
+	
+	</update>
+
+
+</mapper>

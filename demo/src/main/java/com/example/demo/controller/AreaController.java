@@ -15,17 +15,14 @@ import com.google.gson.Gson;
 
 @Controller
 public class AreaController {
-	
 	@Autowired
 	AreaService areaService;
 	
 	@RequestMapping("/weather.do")
-	public String test(Model model) throws Exception{
+	public String weather(Model model) throws Exception{
 		
 		return "/area/weather";
 	}
-	
-	
 	
 	@RequestMapping(value = "/area/si.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -36,7 +33,6 @@ public class AreaController {
 		
 		return new Gson().toJson(resultMap); 
 	}
-	
 	@RequestMapping(value = "/area/gu.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String gu(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
@@ -46,7 +42,6 @@ public class AreaController {
 		
 		return new Gson().toJson(resultMap); 
 	}
-	
 	@RequestMapping(value = "/area/dong.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String dong(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
@@ -57,3 +52,7 @@ public class AreaController {
 		return new Gson().toJson(resultMap); 
 	}
 }
+
+
+
+
